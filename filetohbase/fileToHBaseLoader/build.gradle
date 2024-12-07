@@ -1,0 +1,97 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.0'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+ 
+group = 'com.pelatro'
+version = '0.0.1-SNAPSHOT'
+ 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+ 
+repositories {
+    mavenCentral()
+}
+ 
+dependencies {
+ 
+    // Hadoop dependencies for the client and MapReduce (matching your installed Hadoop version)
+    implementation 'org.apache.hadoop:hadoop-common:3.1.1'
+    implementation 'org.apache.hadoop:hadoop-client:3.1.1'
+    implementation 'org.apache.hadoop:hadoop-mapreduce-client-core:3.1.1'
+    testImplementation 'org.apache.hadoop:hadoop-hdfs:3.1.1'
+    testImplementation 'org.apache.hadoop:hadoop-mapreduce-client-common:3.1.1'
+ 
+    // HBase dependencies for MapReduce integration (matching your installed HBase version)
+    implementation 'org.apache.hbase:hbase-client:2.2.3'
+    implementation 'org.apache.hbase:hbase-common:2.2.3'
+    implementation 'org.apache.hbase:hbase-server:2.2.3'
+    implementation 'org.apache.hbase:hbase-protocol:2.2.3'
+    implementation 'org.apache.hbase:hbase-mapreduce:2.2.3'
+ 
+    // Spring Boot and other dependencies
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+ 
+    // Database dependencies
+    implementation 'org.postgresql:postgresql:42.7.4'
+    runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
+ 
+    // JWT and security dependencies
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+ 
+    implementation 'org.springframework.security:spring-security-crypto:6.4.1'
+    implementation 'org.springframework.security:spring-security-web:6.4.1'
+    implementation 'org.springframework.security:spring-security-core:6.4.1'
+    implementation 'org.springframework.security:spring-security-config:6.4.1'
+ 
+    // Logging with Log4j
+    implementation 'org.apache.logging.log4j:log4j-core:2.24.2'
+    implementation 'org.apache.logging.log4j:log4j-api:2.24.2'
+    testImplementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.24.2'
+ 
+    // Lombok for code generation (Getters, Setters, etc.)
+    implementation 'org.projectlombok:lombok:1.18.24'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+ 
+    // Jackson for JSON parsing
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+ 
+    // Spring Boot DevTools for development only
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+ 
+    // Test dependencies
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+ 
+    // Excluding SLF4J and commons-logging
+    configurations {
+        all {
+            exclude group: 'org.slf4j', module: 'slf4j-reload4j'
+            exclude group: 'commons-logging', module: 'commons-logging'
+        }
+    }
+ 
+    // Add support for Jakarta Servlet API (required for Spring Boot 3.x and above)
+    implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+ 
+    // Optional: For JSP support (only if using JSP)
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.1.33'  // Compatible with Jakarta EE
+ 
+    // Optional: For Servlet API and JSP related classes (if not using JSP, remove these)
+    //implementation 'org.apache.catalina:catalina:10.1.33'
+    //implementation 'org.apache.jasper:jasper-runtime:10.1.33'
+}
+ 
+tasks.named('test') {
+    useJUnitPlatform()
+}
