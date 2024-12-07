@@ -1,0 +1,70 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '8.0.0'
+}
+
+application {
+    mainClass = 'mapreducer.MapReducerApplication' // Main class with the correct package name
+}
+
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Hadoop dependencies
+    implementation 'org.apache.hadoop:hadoop-common:3.1.1'
+    implementation 'org.apache.hadoop:hadoop-client:3.1.1'
+    implementation 'org.apache.hadoop:hadoop-mapreduce-client-core:3.1.1'
+    testImplementation 'org.apache.hadoop:hadoop-hdfs:3.1.1'
+    testImplementation 'org.apache.hadoop:hadoop-mapreduce-client-common:3.1.1'
+
+    // HBase dependencies
+    implementation 'org.apache.hbase:hbase-mapreduce:2.2.3'
+    implementation 'org.apache.hbase:hbase-client:2.2.3'
+    implementation 'org.apache.hbase:hbase-common:2.2.3'
+    implementation 'org.apache.hbase:hbase-server:2.2.3'
+    implementation 'org.apache.hbase:hbase-protocol:2.2.3'
+
+    // Log4j2 for logging
+    implementation 'org.apache.logging.log4j:log4j-core:2.24.2'
+    implementation 'org.apache.logging.log4j:log4j-api:2.24.2'
+    testImplementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.24.2'
+
+
+    // JUnit for testing
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.3'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.11.3'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// Shadow JAR configuration to create a Fat JAR
+shadowJar {
+    archiveBaseName.set('DemoMapReduce')       // Name of the JAR
+    archiveVersion.set('0.0.1-SNAPSHOT')       // Version of the JAR
+    archiveClassifier.set('all')              // Distinguish this as a Fat JAR
+
+    manifest {
+        attributes(
+            'Main-Class': 'mapreducer.MapReducerApplication' // Correct main class name
+        )
+    }
+
+    zip64 = true // Enable for large JAR files
+}
+
+// Ensure `shadowJar` is part of the `build` process
+build.dependsOn shadowJar
